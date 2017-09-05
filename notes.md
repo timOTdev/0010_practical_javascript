@@ -8,7 +8,7 @@
 - Courses out there are not teaching you practical application of JavaScript
 - Most courses only teach you syntax and features 
 - For example, a writing course teaches you only grammar but doesn't force you to write
-- Courses focuses on a single project and increases in difficulty
+- This course focuses on a single project and increases in difficulty
 
 ## The voice in your ear
 > If you've experienced the struggle, take a second and help out by sharing Practical JavaScript.
@@ -72,11 +72,11 @@ I also answer student questions and post updates about new material in the group
 
 # Version 1 - Arrays
 ## Requirements
-- It should have a place to store todos
-- It should have a way to display todos
-- It should have a way to add new todos
-- It should have a way to change a todo
-- It should have a way to delete a todo
+1. It should have a place to store todos
+2. It should have a way to display todos
+3. It should have a way to add new todos
+4. It should have a way to change a todo
+5. It should have a way to delete a todo
 
 ## It should have a place to store todos
 - Opened chrome console to work
@@ -118,6 +118,7 @@ todos // ["item 1", "item 2", "item 3", "item 4"]
 var todos = ['item 1', 'item 2', 'item 3']
 todos[0] // "item 1"
 todos[1] // "item 2"
+todos[2] // "item 3"
 todos[3] // undefined
 ```
 **How do we change an item?**
@@ -138,11 +139,12 @@ todos // ['item 2', 'item 3'"]
 ## Review
 - We learned about using variables
 ```
-todos // ["item 1", "item 2", "item 3"];
+var todos = ['item 1', 'item 2', 'item 3']
+todos // ["item 1", "item 2", "item 3"]
 ```
 - We learned about console.log
 ```
-console.log('My todos:', todos)
+console.log('My todos:', todos) // My Todos: ["item 1", "item 2", "item 3"]
 ```
 - We learned about .push()
 ```
@@ -156,4 +158,212 @@ todos[0] = 'Changed!'
 - We learned about .splice()
 ```
 todos.splice(0, 1)
+```
+# Version 2 - Functions
+## Functions are just recipes
+- Pretend that we have a restaurant and we need to keep recipes
+- It helps save us time by making functions reusable
+```
+// Written in pseudocode
+makeTurkeySandwich
+    Get one slice of bread.
+    Add turkey.
+    Put a slice of a bread on top.
+
+// Written in JavaScript
+function makeTurkeySandwich() {
+    Get one slice of bread;
+    Add turkey;
+    Put a slice of a bread on top;
+}
+
+// To run the function
+makeTurkeySandwich()
+```
+
+## Customizing functions
+- If you have many recipes, some of the ingredients are repetitive
+- We want to write recipes one time and not have 8 different ones for each topping
+```
+// Pseudocode
+// What type of meat?
+makeSandwichWith _____ 
+    Get one slice of bread.
+    Add _____.
+    Put a slice of a bread on top.
+
+// JavaScript
+// Used filling as a parameter
+// An argument is when you add ham for example
+function makeSandwichWith(filling) {
+    Get one slice of bread;
+    Add filling;
+    Put a slice of a bread on top;
+}
+
+// To run the function
+makeSandwichWith_____ // Pseudocode
+makeSandwichWith(ham) // JavaScript
+```
+
+## More on customizing functions
+- A small observation: when you call sayHiTo('gordon'), think that it is setting person = 'gordon'
+```
+function sayHiTo(person) {
+    console.log('hi', person);
+}
+
+sayHiTo('gordon') // hi gordon
+```
+## Requirements
+1. It should have a function to display todos
+2. It should have a function to add todos
+3. It should have a function to change todos
+4. It should have a function to delete todos
+
+## It should have a function to display todos
+- We need some data to work with
+- In Chrome, you have to hit shift + enter to go to next line
+- JS convention to lowercase first letter of word, and uppercase first letter of second word
+
+```
+var todos = ['item 1', 'item 2', 'item 3']
+
+function displayTodos() {
+    console.log('My todos:', todos);
+}
+
+displayTodos() // My todos: ["item 1", "item 2", "item 3"]
+```
+## It should have a function to add new todos
+- Now we want to add new todos
+- Variable todos and function displayTodos() are still there
+- You can push up arrow to go to previous commands you have typed
+```
+function addTodo() {
+    todos.push('new todo');
+}
+
+// Adding 1st todo
+addTodo()
+todos // ["item 1", "item 2", "item 3", "new todo"]
+displayTodos() // My todos: ["item 1", "item 2", "item 3", "new todo"]
+
+// Adding 2nd todo
+addTodo()
+todos // ["item 1", "item 2", "item 3", "new todo", "new todo"]
+displayTodos() // My todos: ["item 1", "item 2", "item 3", "new todo", "new todo"]
+```
+
+- Now adding displayTodos() to run in the function automatically
+```
+function addTodo() {
+    todos.push('new todo');
+    displayTodos();
+}
+
+addToDo() // My todos: ["item 1", "item 2", "item 3", "new todo", "new todo", "new todo"]
+```
+
+- Now we add a parameter to the function
+- So that means we have to add an argument when we call the function
+- Remember that passing the argument 'hello there' is essentially setting the todo parameter equal to "hello there"
+```
+function addTodo(todo) {
+    todos.push(todo);
+    displayTodos();
+}
+
+addTodo('hello there') // My todos: ["item 1", "item 2", "item 3", "new todo", "new todo", "new todo", "hello there"]
+```
+
+## It should have a function to change a todo
+- In version 1, we targetted items in array by using numbers
+- This won't work in version 2
+- Instead, we are using 2 parameters
+```
+// V1 function
+function changeTodo() {
+    todos[0] = 'some new value';
+}
+
+// V2 function
+function changeTodo(position, newValue) {
+    todos[position] = newValue;
+}
+```
+- Let's look at our example again
+```
+displayTodos() // My todos: ["item 1", "item 2", "item 3", "new todo", "new todo", "new todo", "hello there"]
+
+changeTodo(0, 'changed') 
+displayTodos() // My todos: ["changed", "item 2", "item 3", "new todo", "new todo", "new todo", "hello there"]
+```
+- Now we add the displayTodos() call
+```
+// V2 function
+function changeTodo(position, newValue) {
+    todos[position] = newValue;
+    displayTodos();
+}
+```
+- Now we are going to change item 1 again
+```
+changeTodo(0, 'changed again') // My todos: ["changed again", "item 2", "item 3", "new todo", "new todo", "new todo", "hello there"]
+
+```
+
+## It should have a function to delete a todo
+- In version 1, we used splice()
+```
+// V1 function
+function deleteTodo() {
+    todos.splice(0, 1);
+}
+
+// V2 function
+function deleteTodo(position) {
+    todos.splice(position, 1);
+    displayTodos();
+}
+```
+
+- Now we want to delete the 1st item
+```
+displayTodos() // My todos: ["item 2", "item 3", "new todo", "new todo", "hello there"]
+
+deleteTodo(0) // My todos: ["item 3", "new todo",  "new todo", "hello there"]
+deleteTodo(2) // My todos: ["item 3", "new todo", "hello there"]
+```
+
+## Review
+- We can write comments for humans to read, computer will ignore these
+- We use two forward slashes
+- It is good practice to play around with the code to understand
+- Copy the code below into the console and try out the functions
+```
+// It should have a function to display todos
+var todos = ['item 1', 'item 2', 'item 3'];
+
+function displayTodos() {
+    console.log('My todos:', todos);
+}
+
+// It should have a function to add todos
+function addTodo() {
+    todos.push('new todo');
+    displayTodos();
+}
+
+// It should have a function to change todos
+function changeTodo(position, newValue) {
+    todos[position] = newValue;
+    displayTodos();
+}
+
+// It should have a function to delete todos
+function deleteTodo(position) {
+    todos.splice(position, 1);
+    displayTodos();
+}
 ```
