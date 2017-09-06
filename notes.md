@@ -367,3 +367,198 @@ function deleteTodo(position) {
     displayTodos();
 }
 ```
+
+# Version 3 - Objects
+## What is an Object?
+- Objects are used to group related data and functions together
+- Use curly braces to show it's an object
+- Each item is called a "property" and separated by comma
+- Within each property, the value is separated by commas
+- If it's text, you have to put quotes
+- Then we set it to a variable to save it
+```
+var myComputer = {
+    operatingSystem: 'mac',
+    screenSize: '15 inches',
+    purchaseYear: 2011,
+}
+```
+
+- We can call the whole object or each property in the object
+```
+myComputer // Object {operatingSystem: "mac", screenSize: "15 inches", pucharseYear: 2011}
+
+myComputer.operatingSystem // "mac"
+myComputer.screenSize // "15 inches"
+myComputer.purchaseYear // 2011
+
+```
+
+## Objects and functions
+- You can place function in objects
+- We can use the keyword "this" to reference the current object
+- To say the name, we have to specify that with the name of the variable IE this.name
+- We also call the sayName a "method", which is a function inside of an object
+- You don't need to give a name to the function inside the object, it is an "anonymous" function.
+```
+var gordon = {
+    name: 'Gordon',
+    sayName: function() {
+        console.log(this.name);
+    },
+
+}
+```
+
+## Using Plunker
+- Reasons are using Plunker is that our code is getting longer and it saves our code
+- "My plunks" are also different code files we saved
+
+## Requirements
+1. It should store the todos array on an object
+2. It should have a displayTodos method
+3. It should have an addTodo method
+4. It should have a changeTodo method
+5. It should have a deleteTodo method
+
+## It should store the todos array on an object
+```
+var todoList = {
+ todos: ['item1', 'item2', 'item 3'] 
+};
+```
+
+## It should have a displayTodos method
+- We used the "this" keyword in the code
+```
+// V2
+function displayTodos() {
+  console.log('My Todos:', todos);
+}
+
+// V3
+var todoList = {
+ todos: ['item1', 'item2', 'item 3'],
+ displayTodos: function() {
+   console.log('My Todos', this.todos);
+ }
+};
+```
+
+## It should have an addTodo method
+```
+// V2
+function addTodo(todo) {
+  todos.push(todo);
+  displayTodos();
+}
+
+// V3
+var todoList = {
+ todos: ['item1', 'item2', 'item 3'],
+ displayTodos: function() {
+   console.log('My Todos', this.todos);
+ },
+ addTodo: function() {
+  this.todos.push(todo);
+  this.displayTodos();
+ }
+};
+```
+## It should have a changeTodo method
+```
+// V2
+function changeTodo(position, newValue) {
+  todos[position] = newValue;
+  displayTodos();
+}
+
+// V3
+var todoList = {
+ todos: ['item1', 'item2', 'item 3'],
+ displayTodos: function() {
+   console.log('My Todos', this.todos);
+ },
+ addTodo: function() {
+  this.todos.push(todo);
+  this.displayTodos();
+ },
+ changeTodo: function(position, newValue) {
+   this.todos[position] = newValue;
+   this.displayTodos();
+ }
+};
+```
+## It should have a deleteTodo method
+```
+// V2
+function deleteTodo(position) {
+  todos.splice(poistion, 1);
+  displayTodos();
+}
+
+// V3
+var todoList = {
+ todos: ['item1', 'item2', 'item 3'],
+ displayTodos: function() {
+   console.log('My Todos', this.todos);
+ },
+ addTodo: function() {
+  this.todos.push(todo);
+  this.displayTodos();
+ },
+ changeTodo: function(position, newValue) {
+   this.todos[position] = newValue;
+   this.displayTodos();
+ },
+ deleteTodo: function(position) {
+   this.todos.splice(position, 1);
+   this.displayTodos();
+ }
+};
+```
+## Review
+- Notice how all our methods and data are organized in one object
+- The tricky thing was to use the keyword "this"
+- We used dot notation to reference different properties in the object
+```
+var todoList = {
+ todos: ['item1', 'item2', 'item 3'],
+ displayTodos: function() {
+   console.log('My Todos', this.todos);
+ },
+ addTodo: function() {
+  this.todos.push(todo);
+  this.displayTodos();
+ },
+ changeTodo: function(position, newValue) {
+   this.todos[position] = newValue;
+   this.displayTodos();
+ },
+ deleteTodo: function(position) {
+   this.todos.splice(position, 1);
+   this.displayTodos();
+ }
+};
+```
+
+# Interlude - Success is the process
+## Ability - Process * Time
+- When you start, you compare yourself to other programmers
+- Don't focus on things you can't change
+- You can't change the amount of time someone has
+- However, you can learn the process today and you can make the most of the time that you do have
+- You might have a better process than a 10-year programmer
+- Focus on the things you can control
+- Make sure you understand things and make the connections
+- Focus on fundamentals
+- Learn [how to be great at asking coding questions](https://medium.com/@gordon_zhu/how-to-be-great-at-asking-questions-e37be04d0603)
+
+## The most important part of your process
+- You can read the article in the previous chapter
+- People get stuck and can't ask the correct questions will stay stuck
+- Move pass that by asking qood questions
+
+- Asking questions in programming is difficult because it has many moving parts
+- You want to be able to figure out things on your own as a skill
+- If you can't figure something out with honest effort, then you ask your question
