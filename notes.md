@@ -372,8 +372,8 @@ function deleteTodo(position) {
 ## What is an Object?
 - Objects are used to group related data and functions together
 - Use curly braces to show it's an object
-- Each item is called a "property" and separated by comma
-- Within each property, the value is separated by commas
+- Each item is called a "property" and separated by a comma
+- Within each property, the value is separated by a semicolon
 - If it's text, you have to put quotes
 - Then we set it to a variable to save it
 ```
@@ -386,7 +386,7 @@ var myComputer = {
 
 - We can call the whole object or each property in the object
 ```
-myComputer // Object {operatingSystem: "mac", screenSize: "15 inches", pucharseYear: 2011}
+myComputer // Object {operatingSystem: "mac", screenSize: "15 inches", purchaseYear: 2011}
 
 myComputer.operatingSystem // "mac"
 myComputer.screenSize // "15 inches"
@@ -399,7 +399,7 @@ myComputer.purchaseYear // 2011
 - We can use the keyword "this" to reference the current object
 - To say the name, we have to specify that with the name of the variable IE this.name
 - We also call the sayName a "method", which is a function inside of an object
-- You don't need to give a name to the function inside the object, it is an "anonymous" function.
+- You don't need to give a name to the function inside the object, it is an "anonymous" function
 ```
 var gordon = {
     name: 'Gordon',
@@ -412,7 +412,7 @@ var gordon = {
 
 ## Using Plunker
 - Reasons are using Plunker is that our code is getting longer and it saves our code
-- "My plunks" are also different code files we saved
+- "My plunks" are different code files we saved
 
 ## Requirements
 1. It should store the todos array on an object
@@ -459,7 +459,7 @@ var todoList = {
  displayTodos: function() {
    console.log('My Todos', this.todos);
  },
- addTodo: function() {
+ addTodo: function(todo) {
   this.todos.push(todo);
   this.displayTodos();
  }
@@ -520,14 +520,14 @@ var todoList = {
 ## Review
 - Notice how all our methods and data are organized in one object
 - The tricky thing was to use the keyword "this"
-- We used dot notation to reference different properties in the object
+- We used dot notation to reference different properties in the object IE this.todos.push()
 ```
 var todoList = {
  todos: ['item1', 'item2', 'item 3'],
  displayTodos: function() {
    console.log('My Todos', this.todos);
  },
- addTodo: function() {
+ addTodo: function(todo) {
   this.todos.push(todo);
   this.displayTodos();
  },
@@ -545,20 +545,142 @@ var todoList = {
 # Interlude - Success is the process
 ## Ability - Process * Time
 - When you start, you compare yourself to other programmers
-- Don't focus on things you can't change
-- You can't change the amount of time someone has
+- There are two factors: process and time
+- You can't change the amount of time (experience) someone has
 - However, you can learn the process today and you can make the most of the time that you do have
+- Focus on the things you can control like the process
 - You might have a better process than a 10-year programmer
-- Focus on the things you can control
 - Make sure you understand things and make the connections
 - Focus on fundamentals
 - Learn [how to be great at asking coding questions](https://medium.com/@gordon_zhu/how-to-be-great-at-asking-questions-e37be04d0603)
 
 ## The most important part of your process
-- You can read the article in the previous chapter
+- Read the medium article as a guide
 - People get stuck and can't ask the correct questions will stay stuck
 - Move pass that by asking qood questions
-
 - Asking questions in programming is difficult because it has many moving parts
 - You want to be able to figure out things on your own as a skill
 - If you can't figure something out with honest effort, then you ask your question
+
+# Version 4 - Booleans
+## Requirements
+- Now we want to add objects in arrays instead of just text
+- So now we have to properties in each object: task and if task is completed
+1. todoList.addTodo should add objects
+2. todoList.changeTodo should change the todoText property
+3. todoList.toggleCompleted should flip the completed property
+
+## todoList.addTodo should add objects
+- First, we want to add objects instead of text to the array
+- Objects are able to hold more data than just text
+- Here's an example of a Boolean
+```
+{
+  todoText: 'item 1',
+  completed: false // Boolean: true or false
+}
+```
+- Now we format our code to create objects with text and a boolean
+```
+var todoList = {
+ todos: [],
+ displayTodos: function() {
+   console.log('My Todos', this.todos);
+ },
+ addTodo: function(todoText) {
+  this.todos.push({
+    todoText: todoText, // the 2nd is the parameter
+    completed: false
+  });
+  this.displayTodos();
+ },
+ changeTodo: function(position, newValue) {
+   this.todos[position] = newValue;
+   this.displayTodos();
+ },
+ deleteTodo: function(position) {
+   this.todos.splice(position, 1);
+   this.displayTodos();
+ }
+};
+```
+
+## todoList.changeTodo should change the todoText property
+- We are now changing some parameter names to make it more intuitive
+- Notice that we have to format the changeTodo code to follow the object structure
+```
+var todoList = {
+ todos: [],
+ displayTodos: function() {
+   console.log('My Todos', this.todos);
+ },
+ addTodo: function(todoText) {
+  this.todos.push({
+    todoText: todoText, // the 2nd is the parameter
+    completed: false
+  });
+  this.displayTodos();
+ },
+ changeTodo: function(position, todoText) {
+   this.todos[position].todoText = todoText;
+   this.displayTodos();
+ },
+ deleteTodo: function(position) {
+   this.todos.splice(position, 1);
+   this.displayTodos();
+ }
+};
+```
+
+## todoList.toggleCompleted should flip the completed property
+- Bang operator: !
+- It means the opposite of whatever you type
+```
+!true // false
+!false // true
+```
+- Remember the variable is constant, the value is what we are changing
+- Notice we are asking the opposite of gordonBoolean in the 3rd line
+```
+var gordonBoolean = false; 
+!gordonBoolean // true
+gordonBoolean = !gordonBoolean; // true
+```
+- Now we continue with our project
+- We basically added a new method called toggleCompleted
+- This method flips values of the Boolean of true and false
+```
+var todoList = {
+ todos: [],
+ displayTodos: function() {
+   console.log('My Todos', this.todos);
+ },
+ addTodo: function(todoText) {
+  this.todos.push({
+    todoText: todoText, // the 2nd is the parameter
+    completed: false
+  });
+  this.displayTodos();
+ },
+ changeTodo: function(position, todoText) {
+   this.todos[position].todoText = todoText;
+   this.displayTodos();
+ },
+ deleteTodo: function(position) {
+   this.todos.splice(position, 1);
+   this.displayTodos();
+ }
+ toggleCompleted: function(position) {
+     var todo = this.todos[position];
+     todo.completed = !todo.completed;
+     this.displayTodos();
+ }
+};
+
+todoList.toggleCompleted() // true
+```
+
+## Review
+- We change our array to objects
+- We change property to change todos in an objects
+- We learned about Boolean values and the bang operator
