@@ -465,6 +465,7 @@ var todoList = {
  }
 };
 ```
+
 ## It should have a changeTodo method
 ```
 // V2
@@ -489,6 +490,7 @@ var todoList = {
  }
 };
 ```
+
 ## It should have a deleteTodo method
 ```
 // V2
@@ -517,6 +519,7 @@ var todoList = {
  }
 };
 ```
+
 ## Review
 - Notice how all our methods and data are organized in one object
 - The tricky thing was to use the keyword "this"
@@ -580,6 +583,7 @@ var todoList = {
   completed: false // Boolean: true or false
 }
 ```
+
 - Now we format our code to create objects with text and a boolean
 ```
 var todoList = {
@@ -639,6 +643,7 @@ var todoList = {
 !true // false
 !false // true
 ```
+
 - Remember the variable is constant, the value is what we are changing
 - Notice we are asking the opposite of gordonBoolean in the 3rd line
 ```
@@ -646,6 +651,7 @@ var gordonBoolean = false;
 !gordonBoolean // true
 gordonBoolean = !gordonBoolean; // true
 ```
+
 - Now we continue with our project
 - We basically added a new method called toggleCompleted
 - This method flips values of the Boolean of true and false
@@ -684,3 +690,169 @@ todoList.toggleCompleted() // true
 - We change our array to objects
 - We change property to change todos in an objects
 - We learned about Boolean values and the bang operator
+
+# Version 5 - Loops of Logic
+## The for loop
+- We are learning "for loops" so you can repeat a certain amount of codes multiple times
+- In this example below, it stops at 2 and not 3 because the conditions doesn't ask for equal to 3
+- In JavaScript, you can change many of the conditions in the examples below
+```
+// Pseudocode
+i = 0               // Initialization
+Say "hey" if i < 3  // Condition
+Increase i by 1     // Expression
+
+0 "hey"
+1 "hey"
+2 "hey"
+3
+
+// JavaScript
+
+// "hey" x 3
+// i = i + 1 is the same as i++
+for (var i = 0; i < 3; i++) {
+    console.log("hey");
+}
+
+// "hey" x 10
+for (var i = 0; i < 10; i++) {
+    console.log("hey");
+}
+
+// "hey" x 5
+for (var i = 0; i < 10; i = i + 2) {
+    console.log("hey");
+}
+
+// "hey" x 2
+for (var i = 6; i < 10; i = i + 2) {
+    console.log("hey");
+}
+```
+
+## Looping over arrays
+- Notice that "i" is a variable also
+```
+for (var i = 0; i < 3; i++) {
+    console.log(i);
+}
+// 0, 1, 2
+```
+
+- We can also look at an array
+```
+var testArray = ['item 1', 'item 2', 'item 3'];
+testArray[0] // "item 1"
+testArray[1] // "item 2"
+testArray[2] // "item 3"
+
+for (var i = 0; i < 3; i++) {
+    console.log(testArray[i]);
+}
+// item 1, item 2, item 3
+```
+
+- You can also specify the conditions to be more dynamice
+```
+
+for (var i = 0; i < testArray.length; i++) {
+    console.log(testArray[i]);
+}
+```
+
+- So for example if you want to print out all the items in an array
+- This soft coding is helpful if your array changes in length
+- This .length property will help make your code dynamic
+```
+for (var i = 0; i < 3; i++) {
+    console.log(testArray[i]);
+}
+// item 1, item 2, item 3
+
+testArray.push('extra item');
+for (var i = 0; i < testArray.length; i++) {
+    console.log(testArray[i]);
+}
+// item 1, item 2, item 3, extra item
+```
+
+## Requirements
+1. displayTodos should show .todoText
+2. displayTodos should tell you if .todos is empty
+3. displayTodos should show .completed
+
+## displayTodos should show .todoText
+- Now we are going to adapt our code
+```
+var todoList = {
+ todos: [],
+ displayTodos: function() {
+   for (var i = 0; i < this.todos.length; i++) {
+     console.log(this.todos[i].todoText);
+   }
+
+todoList.addTodo('first');
+todoList.addTodo('second');
+}
+```
+
+## displayTodos should tell you if .todos is empty
+- If our todo list is empty, print some text
+- Otherwise, display the todo items
+```
+var todoList = {
+    todos: [],
+    displayTodos: function() {
+        if (this.todos.length === 0) {
+        console.log('Your todo list is empty!');
+        } else {
+        console.log('My Todos:');
+        for (var i = 0; i < this.todos.length; i++) {
+            console.log(this.todos[i].todoText);
+        }    
+    }
+}
+
+todoList.displayTodos(); // Your todo list is empty!
+todoList.addTodo('an item'); // My Todos: an item
+todoList.deleteTodo(0); // Your todo list is empty!
+```
+
+## displayTodos should show .completed
+- Now we want to show if an item is completed with (x), or ( ) if not completed
+```
+var todoList = {
+    todos: [],
+    displayTodos: function() {
+        if (this.todos.length === 0) {
+        console.log('Your todo list is empty!');
+        } else {
+        console.log('My Todos:');
+        for (var i = 0; i < this.todos.length; i++) {
+            if (this.todos[i].completed === true) {
+                console.log('(x)', this.todos[i].todoText);
+            } else {
+                console.log('( )', this.todos[i].todoText);
+            }
+        }    
+    }
+}
+
+todoList.addTodo('first'); // My Todos: ( ) first ( ) second
+todoList.addTodo('second'); // My Todos: ( ) first ( ) second
+todoList.toggleCompleted(1); // My Todos: ( ) first (x) second
+todoList.toggleCompleted(1); // My Todos: ( ) first ( ) second
+todoList.toggleCompleted(0); // My Todos: (x) first ( ) second
+todoList.toggleCompleted(0); // My Todos: ( ) first ( ) second
+
+todoList.addTodo('third'); // My Todos: ( ) first ( ) second ( ) third
+todoList.addTodo('fourth'); // My Todos: ( ) first ( ) second ( ) third ( ) fourth
+todoList.addTodo('fifth'); // My Todos: ( ) first ( ) second ( ) third ( ) fourth ( ) fifth
+todoList.addTodo('sixth'); // My Todos: ( ) first ( ) second ( ) third ( ) fourth ( ) fifth ( ) sixth
+todoList.toggleCompleted(5); // My Todos: ( ) first ( ) second ( ) third ( ) fourth ( ) fifth (x) sixth
+todoList.toggleCompleted(2); // My Todos: ( ) first ( ) second (x) third ( ) fourth ( ) fifth (x) sixth
+```
+
+## Review
+- We combined learning "for loops" and "if statements"
