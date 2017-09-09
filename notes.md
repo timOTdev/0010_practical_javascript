@@ -985,3 +985,94 @@ var todoList = {
 - We practiced a lot of "for loops"
 - You should understand the whole project in the real world
 - Then give it some pre-thought before you write the code
+
+# Interlude - Data types and comparisons
+## Data types overview
+1. Objects (can be as complex as you want)
+- {} // todoList, arrays, functions
+
+
+2. Primitives (building blocks)
+- String // 'Look at this string!'
+- Number // 1, 2, 3, 4
+- Boolean // true, false
+- Undefined // vallue that hasn't been set yet
+- Null // 'Nothing'
+
+## Comparisons with primitives
+- If it looks the same, it is generally the same
+1. With strings
+```
+'gordon' === 'gordon'; // true
+'gordon1' === 'gordon'; // false
+```
+
+2. Number
+```
+1 === 1 // true
+1 === 2 // false
+100 === 100 // true
+```
+
+3. Boolean
+```
+true === true // true
+true === false // false
+false === false // false
+```
+
+4. Undefined & Null
+```
+undefined === undefined // true
+null === null // true
+```
+
+## Comparisons with objects
+- Comparing objects is much different that primitives
+- Some weird examples are below:
+```
+{} === {} // false
+[1, 2, 3] === [1, 2, 3] // false
+```
+
+- We then compare 3 identical houses
+- Using primitives, the analogy is the houses look the same
+- With objects, it cares about the addresses of all the houses
+- Another example:
+```
+// Identical Street
+1001 Identical Street
+1002 Identical Street
+1003 Identical Street
+```
+
+- In JavaScript, each object is created a specific location in memory
+- So it is only true if you're talking about the same object
+```
+// JavaScript
+{} Memory address 1
+{} Memory address 2
+{} Memory address 3
+
+var houseA = {};
+houseA === houseA // true
+```
+
+## Review
+1. Primitives (values)
+- A comparison between all of these values is true
+- It's comparing the value of the data
+```
+2
+2
+2
+```
+
+2. Objects (references)
+- The value might be the same but the values are at different locations
+- That's why they are not the same
+```
+{} Memory address 1
+{} Memory address 2
+{} Memory address 3
+```
