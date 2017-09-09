@@ -568,7 +568,7 @@ var todoList = {
 # Version 4 - Booleans
 ## Requirements
 - Now we want to add objects in arrays instead of just text
-- So now we have to properties in each object: task and if task is completed
+- So now we have to properties in each object: the task and if task is completed
 1. todoList.addTodo should add objects
 2. todoList.changeTodo should change the todoText property
 3. todoList.toggleCompleted should flip the completed property
@@ -607,6 +607,8 @@ var todoList = {
    this.displayTodos();
  }
 };
+
+todoList.addTodo("Code a project")
 ```
 
 ## todoList.changeTodo should change the todoText property
@@ -634,6 +636,8 @@ var todoList = {
    this.displayTodos();
  }
 };
+
+todoList.changeTodo(0, "Code tomorow")
 ```
 
 ## todoList.toggleCompleted should flip the completed property
@@ -694,7 +698,7 @@ todoList.toggleCompleted() // true
 # Version 5 - Loops of Logic
 ## The for loop
 - We are learning "for loops" so you can repeat a certain amount of codes multiple times
-- In this example below, it stops at 2 and not 3 because the conditions doesn't ask for equal to 3
+- In this example below, it stops at 2 and not 3
 - In JavaScript, you can change many of the conditions in the examples below
 ```
 // Pseudocode
@@ -705,7 +709,7 @@ Increase i by 1     // Expression
 0 "hey"
 1 "hey"
 2 "hey"
-3
+3 // the conditions doesn't ask for equal to 3
 
 // JavaScript
 
@@ -753,16 +757,17 @@ for (var i = 0; i < 3; i++) {
 // item 1, item 2, item 3
 ```
 
-- You can also specify the conditions to be more dynamice
+- You can also specify the conditions to be more dynamic
+- Here we set the condition to be "i < testArray.length":
 ```
-
 for (var i = 0; i < testArray.length; i++) {
     console.log(testArray[i]);
 }
 ```
 
 - So for example if you want to print out all the items in an array
-- This soft coding is helpful if your array changes in length
+- This soft coding is helpful if your array changes in length IE i < testArray.length
+- Hard coding would be setting a number IE i < 3
 - This .length property will help make your code dynamic
 ```
 for (var i = 0; i < 3; i++) {
@@ -807,7 +812,7 @@ var todoList = {
         if (this.todos.length === 0) {
         console.log('Your todo list is empty!');
         } else {
-        console.log('My Todos:');
+        console.log('My Todos: ');
         for (var i = 0; i < this.todos.length; i++) {
             console.log(this.todos[i].todoText);
         }    
@@ -856,3 +861,127 @@ todoList.toggleCompleted(2); // My Todos: ( ) first ( ) second (x) third ( ) fou
 
 ## Review
 - We combined learning "for loops" and "if statements"
+
+# Version 6 - Thinking in Code
+## Requirements
+1. .toggleAll: If everything's true, make everything false
+2. .toggleAll: Otherwise, make everything true
+- This includes if some if already checked or true
+- It helps to think about projects ahead of time
+
+## .toggleAll: If everything's true, make everything false
+- We will basically loop through all the todos to see if everything is complete (true)
+- It will check the total todos in the list to the match equally with the same number of complete
+- If both are equal, then toggleAll function will mark all as incomplete (false)
+```
+var todoList = {
+ todos: [],
+ displayTodos: function() {
+   console.log('My Todos', this.todos);
+ },
+ addTodo: function(todoText) {
+  this.todos.push({
+    todoText: todoText, // the 2nd is the parameter
+    completed: false
+  });
+  this.displayTodos();
+ },
+ changeTodo: function(position, todoText) {
+   this.todos[position].todoText = todoText;
+   this.displayTodos();
+ },
+ deleteTodo: function(position) {
+   this.todos.splice(position, 1);
+   this.displayTodos();
+ }
+ toggleCompleted: function(position) {
+     var todo = this.todos[position];
+     todo.completed = !todo.completed;
+     this.displayTodos();
+ }
+ toggleAll: function() {
+     var totalTodos = this.todos.length;
+     var completed Todos = 0;
+
+     // Get number of completed todos.
+     for (var i = 0; i < totalTodos; i++) {
+         if (this.todos[i].completed === true) {
+             completedTodos++;
+         }
+     }
+
+     // Case 1: If everything's true, make everything false
+     if (completedTodos === totalTodos) {
+         // Make everything false.
+        for (var i =0; i < totalTodos; i++) {
+            this.todos[i].completed = false;
+        }
+     }
+
+    this.displayTodos();
+ }
+};
+```
+
+## .toggleAll: Otherwise, make everything true
+- If you find yourself saying otherwise, this is perfect for the  else statement
+- Here's where we are working on case 2:
+```
+var todoList = {
+ todos: [],
+ displayTodos: function() {
+   console.log('My Todos', this.todos);
+ },
+ addTodo: function(todoText) {
+  this.todos.push({
+    todoText: todoText, // the 2nd is the parameter
+    completed: false
+  });
+  this.displayTodos();
+ },
+ changeTodo: function(position, todoText) {
+   this.todos[position].todoText = todoText;
+   this.displayTodos();
+ },
+ deleteTodo: function(position) {
+   this.todos.splice(position, 1);
+   this.displayTodos();
+ }
+ toggleCompleted: function(position) {
+     var todo = this.todos[position];
+     todo.completed = !todo.completed;
+     this.displayTodos();
+ }
+ toggleAll: function() {
+     var totalTodos = this.todos.length;
+     var completed Todos = 0;
+
+     // Get number of completed todos.
+     for (var i = 0; i < totalTodos; i++) {
+         if (this.todos[i].completed === true) {
+             completedTodos++;
+         }
+     }
+
+     // Case 1: If everything's true, make everything false
+     if (completedTodos === totalTodos) {
+         // Make everything false.
+        for (var i =0; i < totalTodos; i++) {
+            this.todos[i].completed = false;
+        }
+    // Case 2: Otherwise, make evertyhing true
+     } else {
+         for (var i= 0; i < totalTodos; i++) {
+             this.todos[i].completed = true;
+         }
+     }
+
+    this.displayTodos();
+ }
+};
+```
+## Review
+- We had a more complex behavior in this version
+- We practiced a lot of "for loops"
+- You should understand the whole project in the real world
+- Then give it some pre-thought before you write the code
