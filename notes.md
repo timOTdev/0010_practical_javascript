@@ -867,12 +867,12 @@ todoList.toggleCompleted(2); // My Todos: ( ) first ( ) second (x) third ( ) fou
 1. .toggleAll: If everything's true, make everything false
 2. .toggleAll: Otherwise, make everything true
 - This includes if some if already checked or true
-- It helps to think about projects ahead of time
+- It helps to think about the code ahead of time
 
 ## .toggleAll: If everything's true, make everything false
-- We will basically loop through all the todos to see if everything is complete (true)
+- We will basically loop through all the todos to see if everything is complete/true
 - It will check the total todos in the list to the match equally with the same number of complete
-- If both are equal, then toggleAll function will mark all as incomplete (false)
+- If both values are equal, then toggleAll function will mark all as incomplete/false
 ```
 var todoList = {
  todos: [],
@@ -924,7 +924,7 @@ var todoList = {
 ```
 
 ## .toggleAll: Otherwise, make everything true
-- If you find yourself saying otherwise, this is perfect for the  else statement
+- If you find yourself saying "otherwise", this is perfect for the else statement
 - Here's where we are working on case 2:
 ```
 var todoList = {
@@ -969,6 +969,7 @@ var todoList = {
         for (var i =0; i < totalTodos; i++) {
             this.todos[i].completed = false;
         }
+
     // Case 2: Otherwise, make evertyhing true
      } else {
          for (var i= 0; i < totalTodos; i++) {
@@ -983,7 +984,7 @@ var todoList = {
 ## Review
 - We had a more complex behavior in this version
 - We practiced a lot of "for loops"
-- You should understand the whole project in the real world
+- You should understand the whole project when assigned in the real world
 - Then give it some pre-thought before you write the code
 
 # Interlude - Data types and comparisons
@@ -991,12 +992,11 @@ var todoList = {
 1. Objects (can be as complex as you want)
 - {} // todoList, arrays, functions
 
-
 2. Primitives (building blocks)
 - String // 'Look at this string!'
 - Number // 1, 2, 3, 4
 - Boolean // true, false
-- Undefined // vallue that hasn't been set yet
+- Undefined // value that hasn't been set yet
 - Null // 'Nothing'
 
 ## Comparisons with primitives
@@ -1047,7 +1047,8 @@ null === null // true
 ```
 
 - In JavaScript, each object is created a specific location in memory
-- So it is only true if you're talking about the same object
+- So it is only true if you're talking about the same location
+- It doesn't matter that the data looks the same
 ```
 // JavaScript
 {} Memory address 1
@@ -1069,10 +1070,115 @@ houseA === houseA // true
 ```
 
 2. Objects (references)
-- The value might be the same but the values are at different locations
+- The values might be the same but the values are at different locations
 - That's why they are not the same
 ```
 {} Memory address 1
 {} Memory address 2
 {} Memory address 3
 ```
+# Version 7 - HTML and the DOM
+## Requirements
+- Our app is reaching logic limit, now we are working on user experience
+1. There should be a "Display todos" button and a "Toggle all" button in the app
+2. Clicking "Display todos" should run todoList.displayTodos
+3. Clicking "Toggle all" should run todoList.toggleAll
+
+## HTML essentials
+- HTML tags - defines how the element is displayed
+- Elements are usually contained in an opening and closing element
+- The DOCTYPE tells the browser what version of HTML you are using
+- <link> tags don't have closing tags
+- It's better to not memorize, you'll learn as you go
+- There are a ton of tags
+- <html> is where all our codes go
+- <head> is where you link all the local css and js files to run our page
+- <body> is where all the text users will see when visiting your site
+- <h1> to <h6> is how you show headings 
+- <p> is the paragraph text
+
+## What's the DOM?
+- Means "document object model"
+- It's what the browser's interpretation of your html file
+- It uses the DOM to build the website
+- You can right-click on the page and hit inspect
+- We mainly use the DOM with just JavaScript, but it is involved in other languages
+
+## There should be a "Display todos" button and a "Toggle all' button in the app
+- We are going to use the html to fulfill this requirement
+- The buttons won't do anything yet, we will hook them later
+```
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+        <script src="script.js"></script>
+    </head>
+
+    <body>
+        <h1>Todo List</h1>
+
+        <button id="displayTodosButton">Display Todos</button>
+        <button>Toggle All</button>
+    </body>
+</html>
+```
+## Clicking "Display todos" should run todoList.displayTodos
+- You can see the DOM by typing document in the JavaScript console
+- There are methods on the document object to select specific elements
+- We can use an **attribute** called id to select the specific button element
+- Use console.log to test if your selectors are working
+- Don't forget to put the script link at the bottom of body the html file
+- We use .addEventListener to listen for events like clicks
+```
+// 1. We want to get access to the display todos button
+var displayTodosBUtton = document.getElementById('displaysTodosButton');
+console.log(displayTodosButton);
+
+// 2. We want to run displayTodos method, when someone clicks the display todos button
+displayTodos.Button.addEventListener('click', function() {
+    todoList.displayTodos();
+});
+```
+
+## Clicking "Toggle all" should run todoList.toggleAll
+- We need to add an id in the html
+```
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+        <script src="script.js"></script>
+    </head>
+
+    <body>
+        <h1>Todo List</h1>
+
+        <button id="displayTodosButton">Display Todos</button>
+        <button id="toggleAllButton">Toggle All</button>
+    </body>
+</html>
+```
+
+- Then add the button in javascript
+- We also add an event listener for clicks
+```
+// 1. We want to get access to the display todos button
+var displayTodosBUtton = document.getElementById('displaysTodosButton');
+var toggleAllButton = document.getElementById('toggleAllButton');
+
+// 2. We want to run displayTodos method, when someone clicks the display todos button
+displayTodos.Button.addEventListener('click', function() {
+    todoList.displayTodos();
+});
+
+toggleAllButton.addEventListener('click', function() {
+    todoList.toggleAll();
+})
+```
+
+## Review
+- We learned new concepts
+- Don't forget to put script tag at the end of the body
+- We also learned how to add the id attribute
+- There are a lot of tags and event listeners so don't go study them
