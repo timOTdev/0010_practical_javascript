@@ -1086,7 +1086,7 @@ houseA === houseA // true
 
 ## HTML essentials
 - HTML tags - defines how the element is displayed
-- Elements are usually contained in an opening and closing element
+- Elements are usually contained in an opening and closing tag
 - The DOCTYPE tells the browser what version of HTML you are using
 - <link> tags don't have closing tags
 - It's better to not memorize, you'll learn as you go
@@ -1102,7 +1102,7 @@ houseA === houseA // true
 - It's what the browser's interpretation of your html file
 - It uses the DOM to build the website
 - You can right-click on the page and hit inspect
-- We mainly use the DOM with just JavaScript, but it is involved in other languages
+- We mainly use the DOM with just JavaScript but it is involved in other languages
 
 ## There should be a "Display todos" button and a "Toggle all' button in the app
 - We are going to use the html to fulfill this requirement
@@ -1182,3 +1182,133 @@ toggleAllButton.addEventListener('click', function() {
 - Don't forget to put script tag at the end of the body
 - We also learned how to add the id attribute
 - There are a lot of tags and event listeners so don't go study them
+
+# Interlude - Don't wonder about things the debugger can tell you
+## todoList.displayTodos
+- Debugging is the process of fixing codes that create errors
+- We were manually debugging with just our eyes, there's a more efficient tool
+- We do that by adding the line debugger;
+- It will stop at that line where we added the debugger
+- Now you can see all the objects defined
+- You can also see more if you hover over the objects
+- Use "step over next function call" to simulate the process running line by line
+```
+var todoList = {
+    todos: [],
+    displayTodos: function() {
+        debugger;
+        if (this.todos.length === 0) {
+        console.log('Your todo list is empty!');
+        } else {
+        console.log('My Todos: ');
+        for (var i = 0; i < this.todos.length; i++) {
+            console.log(this.todos[i].todoText);
+        }    
+    }
+}
+```
+
+## todoList.addTodo
+- Now we are going to run debugger on the addTodo method
+- There's also a "step into function call" that lets you go into the method
+```
+TodoList.addTodo('runnin the debugger');
+
+addTodo: function(todoText) {
+    debugger;
+    this.todos.push({
+    todoText: todoText, // the 2nd is the parameter
+    completed: false
+    });
+    this.displayTodos();
+},
+```
+
+## todoList.changeTodo
+- Now we try debugger on changeTodo method
+```
+todoList.addTodo('Something that we want to change');
+todoList.changeTodo(0, 'Changed happened!);
+
+changeTodo: function(position, todoText) {
+    debugger;
+   this.todos[position].todoText = todoText;
+   this.displayTodos();
+ },
+```
+
+## todoList.deleteTodo
+```
+todoList.addTodo('delete this garbage');
+todoList.deleteTodo(0);
+
+deleteTodo: function(position) {
+    debugger;
+    this.todos.splice(position, 1);
+    this.displayTodos();
+}
+```
+
+## todoList.toggleCompleted
+```
+todoList.addTodo('to be toggled');
+todoList.toggleCompleted(0);
+
+toggleCompleted: function(position) {
+    debugger;
+    var todo = this.todos[position];
+    todo.completed = !todo.completed;
+    this.displayTodos();
+}
+```
+
+## todoList.toggleAll
+- This one is more thorough
+- Run through Case 2 on your own
+```
+todoList.addTodo('this is true');
+todoList.toggleCompleted(0);
+
+ toggleAll: function() {
+     debugger;
+     var totalTodos = this.todos.length;
+     var completed Todos = 0;
+
+     // Get number of completed todos.
+     for (var i = 0; i < totalTodos; i++) {
+         if (this.todos[i].completed === true) {
+             completedTodos++;
+         }
+     }
+
+     // Case 1: If everything's true, make everything false
+     if (completedTodos === totalTodos) {
+         // Make everything false.
+        for (var i =0; i < totalTodos; i++) {
+            this.todos[i].completed = false;
+        }
+
+    // Case 2: Otherwise, make evertyhing true
+     } else {
+         for (var i= 0; i < totalTodos; i++) {
+             this.todos[i].completed = true;
+         }
+     }
+
+    this.displayTodos();
+ }
+};
+```
+
+## Use the debugger all the time
+- This helps you spots problems with your code
+- It helps you understanding your code
+
+## Focus on understanding, not building from scratch
+- Most courses fail to set reasonable expectations about what your abilities should be
+- So you have unrealistic expectations about building projects from scratch
+- Focus completely on understanding concepts
+- Focus on understading things deeply and then forget about it
+- It is a human condition that you cannot remember everything
+- When you need something, you can search again and refresh your knowledge quickly
+- The debugger helps you understand your code deeply
