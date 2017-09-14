@@ -1650,3 +1650,253 @@ var handlers = {
 ## Review
 - In version 8, we learned how to use inputs to grab user input
 - We also use some extra processing with .valueAsNumber
+
+# Version 9 - Escape from the console
+## Requirements
+- We are not going to use the console anymore
+- We will be using the user interface to issue all of our commands
+- We will be displaying our to do list right in the app itself
+- The requirements are:
+1. There should be an li element for every todo
+2. Each li element should contain .todoText
+3. Each li element should show .completed
+
+## Inserting li elements into the DOM
+- We are going to learn how to insert elements into the DOM
+- We learned about <ul>, <ol>, <li>
+- When you add an <li> to <ul>, you get bullets
+- When you add an <li> to <ol>, you get numbers
+```
+<div>
+    <button onclick="handlers.displayTodos()">Display Todos</button>
+    <button onclick="handlers.toggleAll()">Toggle All</button>
+</div>
+
+<div>
+    <button onclick="handlers.addTodo()">Add</button>
+    <input id="addTodoTextInput" type="text">
+</div>
+
+<div>
+    <button onclick="handlers.changeTodo()">Change Todo</button>
+    <input id="changeTodoPositionInput" type="number">
+    <input id="changeTodoTextInput" type="text">
+</div>
+
+<div>
+    <button onclick="handlers.deleteTodo()"></button>
+    <input id="deleteTodoPositionInput" type="number">
+</div>
+
+<div>
+    <button onclick="handlers.toggleCompleted>Toggle Completed</button>
+    <input id="toggleCompletedPositionInput" type="number">
+</div>
+
+<ul>
+</ul>
+```
+
+- Now we are going to use JS to manipulate the DOM
+- We use .createElement to create li elements to our DOM
+- We use .querySelector to select different elements, it's very flexible
+- We use . appendChild to add elements as child to a parent
+```
+var todoLi = document.createElement('li');
+todoLi // <li></li>
+
+var todosUl = document.querySelector('ul');
+todosUl // <ul></ul>
+
+todosUl.appendChild(todoLi);
+```
+
+## There should be an li element for every todo
+- We want are code to update as we add li's
+- First, make sure you have an empty <ul> in html
+
+- We are adding a variable view to display todos array on the screen
+- It doesn't add any logic
+- We add this to our JS file:
+```
+var view = {
+    displayTodos: function() {        
+        var todosUl = document.querySelector('ul');
+        todosUl.innerHTML = '';
+        for (var i = 0; i < todoList.todos.length; i++) {
+            var todoLi = document.createChild('li');
+            todosUl = appendChild(todoLi);
+        }
+    }
+}
+```
+
+## Each li element should contain .todoText
+- We are just going to add one line of code in JS:
+- We use .textContent will let you set the text content of the element
+```
+var view = {
+    displayTodos: function() {        
+        var todosUl = document.querySelector('ul');
+        todosUl.innerHTML = '';
+        for (var i = 0; i < todoList.todos.length; i++) {
+            var todoLi = document.createChild('li');
+            todoLi.textContent = todoList.todos.[i].todoText;
+            todosUl = appendChild(todoLi);
+        }
+    }
+}
+```
+
+## Each li element should show .completed
+- The line that is commented out was replaced with the line above it
+- We are basically adding logic about how to display completed tasks
+```
+var view = {
+    displayTodos: function() {        
+        var todosUl = document.querySelector('ul');
+        todosUl.innerHTML = '';
+        for (var i = 0; i < todoList.todos.length; i++) {
+            var todoLi = document.createChild('li');
+            var todo = todoList.todos[i];
+
+            // var todoTextWithCompletion = '';
+            // if (todo.completed === true)
+                // (x) todoText
+            // else
+                // ( ) todoText
+                // todoLi.textContent = todoTextWithComplettion;
+
+            var todoTextWithCompletion = '';
+            if (todo.completed === true) {
+                todoTextWithCompletion = '(x) ' + todo.todoText;
+            } else {
+                todoTextWithCompletion = '( ) ' + todo.todoText;
+            }
+
+            todoLi.textContent = todoTextWithCompletion;
+            <!-- todoLi.textContent = todoList.todos.[i].todoText; -->
+            todosUl = appendChild(todoLi);
+        }
+    }
+}
+```
+
+- Gordon then ran the example in the console
+```
+view.displayTodos();
+```
+
+## Escaping the console
+- To display the app, we have to think about how we want to display it
+- We want to run it at the end of our handlers
+- We are getting rid of displayTodos handlers since now it automatically displays todos
+- We are running view.displayTodos(); at the end of every handler
+```
+var handlers = {
+    addTodo: function() {
+        var addTodoTextInput = document.getElementById('addTodoTextInput');
+        todoList.addTodo(addTodoTextInput.value);
+        addTodoTextInput.value = '';
+        view.displayTodos();
+    },
+    changeTodo: function() {
+        var changeTodoPositionInput = document.getElementById('changeTodoPositionInput');
+        var changeTodoTextInput = document.getElementById('changeTodoTextInput');
+        todoList.changeTodo(changeTodoPositionInput.valueAsNumber, changeTodoTextInput.value);
+        changeTodoPositionInput.value = '';
+        changeTodoTextInput.value = '';
+        view.displayTodos();
+    },
+    deleteTodo: function() {
+        var deleteTodoPositionInput = document.getElementById('deleteTodoPositionInput');
+        todoList.deleteTodo(deleteTodoPositionInput.valueAsNumber);
+        deleteTodoPositionInput.value = '';
+        view.displayTodos();
+    },
+    toggleCompleted: function() {
+        var toggleCompletedPositionInput = document.getElementById('toggleCompletedPositionInput');
+        todoList.toggleCompleted(toggleCompletedPositionInput.valueAsNumber);
+        toggleCompletedPositionInput.value = '';
+        view.displayTodos();
+    },
+    toggleAll: function() {
+        todoList.toggleAll();
+        view.displayTodos();
+    }
+}   
+```
+```
+var view = {
+    displayTodos: function() {        
+        var todosUl = document.querySelector('ul');
+        todosUl.innerHTML = '';
+        for (var i = 0; i < todoList.todos.length; i++) {
+            var todoLi = document.createChild('li');
+            var todo = todoList.todos[i];
+
+            // var todoTextWithCompletion = '';
+            // if (todo.completed === true)
+                // (x) todoText
+            // else
+                // ( ) todoText
+                // todoLi.textContent = todoTextWithComplettion;
+
+            var todoTextWithCompletion = '';
+            if (todo.completed === true) {
+                todoTextWithCompletion = '(x) ' + todo.todoText;
+            } else {
+                todoTextWithCompletion = '( ) ' + todo.todoText;
+            }
+
+            todoLi.textContent = todoTextWithCompletion;
+            <!-- todoLi.textContent = todoList.todos.[i].todoText; -->
+            todosUl = appendChild(todoLi);
+        }
+    }
+}
+```
+
+- We are also displaytodos button from the HTML and handlers;
+```
+    <button onclick="handlers.displayTodos()">Display Todos</button>
+```
+```
+    displayTodos: function() {
+    todoList.displayTodos();
+    },
+```
+
+- We also no longer need to run displayTodos in the console
+- We remove it from JS:
+```
+    this.displayTodos();
+```
+```
+var todoList = {
+    todos: [],
+    displayTodos: function() {
+        if (this.todos.length === 0) {
+        console.log('Your todo list is empty!');
+        } else {
+        console.log('My Todos:');
+        for (var i = 0; i < this.todos.length; i++) {
+            if (this.todos[i].completed === true) {
+                console.log('(x)', this.todos[i].todoText);
+            } else {
+                console.log('( )', this.todos[i].todoText);
+            }
+        }    
+    }
+}
+```
+
+## Review
+- We wrote a lot of code in the view object
+- The difference is that we are not working with the console anymore
+- Now we are working with the DOM
+- We inserted the <ul> in the html
+- We are now use the view object in every handler
+- The handlers is designed to help shorten our code
+- The view object is just meant to display to do items
+- Now you can understand how to declutter and refactor your code
