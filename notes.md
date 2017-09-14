@@ -1132,11 +1132,11 @@ houseA === houseA // true
 - We use .addEventListener to listen for events like clicks
 ```
 // 1. We want to get access to the display todos button
-var displayTodosBUtton = document.getElementById('displaysTodosButton');
+var displayTodosButton = document.getElementById('displaysTodosButton');
 console.log(displayTodosButton);
 
 // 2. We want to run displayTodos method, when someone clicks the display todos button
-displayTodos.Button.addEventListener('click', function() {
+displayTodosButton.addEventListener('click', function() {
     todoList.displayTodos();
 });
 ```
@@ -1164,7 +1164,7 @@ displayTodos.Button.addEventListener('click', function() {
 - We also add an event listener for clicks
 ```
 // 1. We want to get access to the display todos button
-var displayTodosBUtton = document.getElementById('displaysTodosButton');
+var displayTodosButton = document.getElementById('displaysTodosButton');
 var toggleAllButton = document.getElementById('toggleAllButton');
 
 // 2. We want to run displayTodos method, when someone clicks the display todos button
@@ -1312,3 +1312,341 @@ todoList.toggleCompleted(0);
 - It is a human condition that you cannot remember everything
 - When you need something, you can search again and refresh your knowledge quickly
 - The debugger helps you understand your code deeply
+
+# Version 8 - Getting data from inputs
+## Our first refactoring
+- Refactoring is the process of restructuring exisiting computer code without changing its external behavior
+- It helps our code easier to read, easier to understand, and neater
+- In the code below we are using .getElementById
+- But it adds a lot of code 
+- There is a way to get rid of the variable line and ID's
+```
+var displayTodosButton = document.getElementById('displaysTodosButton');
+var toggleAllButton = document.getElementById('toggleAllButton');
+
+displayTodosButton.addEventListener('click', function() {
+    todoList.displayTodos();
+});
+
+toggleAllButton.addEventListener('click", function() {
+    todoList.toggleAll();
+});
+```
+
+- Now we refactor our html first to remove the id's
+- We now add onclick attribute to the button
+```
+<button id="displayTodosButton">Display Todos</button>
+<button id="toggleAllButton">Toggle All</button>
+
+<button onclick="">Display Todos</button>
+<button onclick="">Toggle All</button>
+```
+
+- We will add the functions to these onclick attrtibutes
+- We need to create a handler in the JavaScript
+```
+var displayTodosButton = document.getElementById('displaysTodosButton');
+var toggleAllButton = document.getElementById('toggleAllButton');
+
+<!-- displayTodosButton.addEventListener('click', function() {
+    todoList.displayTodos();
+});
+
+toggleAllButton.addEventListener('click", function() {
+    todoList.toggleAll();
+}); -->
+
+var handlers = {
+    displayTodos: function() {
+    todoList.displayTodos();
+    },
+    toggleAll: function() {
+    todoList.toggleAll();
+    }
+}
+```
+
+- Then we will add the handler inside the html
+```
+<button onclick="handlers.displayTodos()">Display Todos</button>
+<button onclick="handlers.toggleAll()">Toggle All</button>
+```
+
+**Comparison**
+```
+var displayTodosButton = document.getElementById('displaysTodosButton');
+var toggleAllButton = document.getElementById('toggleAllButton');
+
+displayTodosButton.addEventListener('click', function() {
+    todoList.displayTodos();
+});
+
+toggleAllButton.addEventListener('click", function() {
+    todoList.toggleAll();
+});
+
+<!-- versus -->
+
+var handlers = {
+    displayTodos: function() {
+    todoList.displayTodos();
+    },
+    toggleAll: function() {
+    todoList.toggleAll();
+    }
+}    
+```
+
+## More on refactoring
+- Refactoring happens a lot in the real world
+- It is rarely mentioned in different courses
+- First you want your code to work
+- Then you want to optimize it later
+- Often you don't realize that you can refactor beforehand
+- Neither is it a clear decision to use .addEventListener vs handler's
+- It is a judgment call depending the situation
+
+## Requirements
+1. It should have working controls for .addTodo
+2. It should have working controls for .changeTodo
+3. It should have working controls for .delete Todo
+4. It should have working controls for .toggleCompleted
+
+## There should be a button for adding todos
+- We are going to add a new button for adding todos
+- We need to add a new button for users to input data
+- We are using a div to separate the buttons
+- We use type attribute on input but there are many types
+```
+<div>
+    <button onclick="handlers.displayTodos()">Display Todos</button>
+    <button onclick="handlers.toggleAll()">Toggle All</button>
+</div>
+
+<div>
+    <button onclick="">Add</button>
+    <input id="addTodoTextInput type="text">
+</div>
+```
+
+- Now we move over to the JavaScript 
+```
+var handlers = {
+    displayTodos: function() {
+    todoList.displayTodos();
+    },
+    toggleAll: function() {
+    todoList.toggleAll();
+    },
+    addTodo: function() {
+        var addTodoTextInput = document.getElementById('addTodoTextInput');
+        todoList.addTodo(addTodoTextInput.value);
+    }
+}    
+```
+
+- We still need to add the onclick element
+```
+<div>
+    <button onclick="handlers.displayTodos()">Display Todos</button>
+    <button onclick="handlers.toggleAll()">Toggle All</button>
+</div>
+
+<div>
+    <button onclick="handlers.addTodo()">Add</button>
+    <input id="addTodoTextInput" type="text">
+</div>
+```
+
+- We also need to clear the box after the user adds text
+- We do this by adding to JavaScript
+```
+var handlers = {
+    displayTodos: function() {
+    todoList.displayTodos();
+    },
+    toggleAll: function() {
+    todoList.toggleAll();
+    },
+    addTodo: function() {
+        var addTodoTextInput = document.getElementById('addTodoTextInput');
+        todoList.addTodo(addTodoTextInput.value);
+        addTodoTextInput.value = '';
+    }
+}    
+```
+
+- So in this lesson, we are using the same onclick attribute
+- The new thing is adding the input id
+
+## There should be a button for changing todos
+- We need one input for the position we are going to change
+- We need another input for the todo text
+- Number inputs are different from text
+- Number input has arrows that you and incr/decr values
+```
+<div>
+    <button onclick="handlers.displayTodos()">Display Todos</button>
+    <button onclick="handlers.toggleAll()">Toggle All</button>
+</div>
+
+<div>
+    <button onclick="handlers.addTodo()">Add</button>
+    <input id="addTodoTextInput" type="text">
+</div>
+
+<div>
+    <button onclick="handlers.changeTodo()">Change Todo</button>
+    <input id="changeTodoPositionInput" type="number">
+    <input id="changeTodoTextInput" type="text">
+</div>
+```
+
+- Now we also need to add the handler function in JS
+- We use .valueAsNumber to get values as numbers instead of a string when we just use .value
+```
+var handlers = {
+    displayTodos: function() {
+    todoList.displayTodos();
+    },
+    toggleAll: function() {
+    todoList.toggleAll();
+    },
+    addTodo: function() {
+        var addTodoTextInput = document.getElementById('addTodoTextInput');
+        todoList.addTodo(addTodoTextInput.value);
+        addTodoTextInput.value = '';
+    },
+    changeTodo: function() {
+        var changeTodoPositionInput = document.getElementById('changeTodoPositionInput');
+        var changeTodoTextInput = document.getElementById('changeTodoTextInput');
+        todoList.changeTodo(changeTodoPositionInput.valueAsNumber, changeTodoTextInput.value);
+        changeTodoPositionInput.value = '';
+        changeTodoTextInput.value = '';
+    }
+}   
+```
+
+## There should be a button for deleting todos
+- Now we are adding a new div for the deleting todos button
+```
+<div>
+    <button onclick="handlers.displayTodos()">Display Todos</button>
+    <button onclick="handlers.toggleAll()">Toggle All</button>
+</div>
+
+<div>
+    <button onclick="handlers.addTodo()">Add</button>
+    <input id="addTodoTextInput" type="text">
+</div>
+
+<div>
+    <button onclick="handlers.changeTodo()">Change Todo</button>
+    <input id="changeTodoPositionInput" type="number">
+    <input id="changeTodoTextInput" type="text">
+</div>
+
+<div>
+    <button onclick="handlers.deleteTodo()"></button>
+    <input id="deleteTodoPositionInput" type="number">
+</div>
+```
+
+-Now over to JS to add a new method
+```
+var handlers = {
+    displayTodos: function() {
+    todoList.displayTodos();
+    },
+    toggleAll: function() {
+    todoList.toggleAll();
+    },
+    addTodo: function() {
+        var addTodoTextInput = document.getElementById('addTodoTextInput');
+        todoList.addTodo(addTodoTextInput.value);
+        addTodoTextInput.value = '';
+    },
+    changeTodo: function() {
+        var changeTodoPositionInput = document.getElementById('changeTodoPositionInput');
+        var changeTodoTextInput = document.getElementById('changeTodoTextInput');
+        todoList.changeTodo(changeTodoPositionInput.valueAsNumber, changeTodoTextInput.value);
+        changeTodoPositionInput.value = '';
+        changeTodoTextInput.value = '';
+    },
+    deleteTodo: function() {
+        var deleteTodoPositionInput = document.getElementById('deleteTodoPositionInput');
+        todoList.deleteTodo(deleteTodoPositionInput.valueAsNumber);
+        deleteTodoPositionInput.value = '';
+    }
+}   
+```
+
+## There should be a button for toggling a todo
+- Now we are adding a new div for the toggling todo button
+```
+<div>
+    <button onclick="handlers.displayTodos()">Display Todos</button>
+    <button onclick="handlers.toggleAll()">Toggle All</button>
+</div>
+
+<div>
+    <button onclick="handlers.addTodo()">Add</button>
+    <input id="addTodoTextInput" type="text">
+</div>
+
+<div>
+    <button onclick="handlers.changeTodo()">Change Todo</button>
+    <input id="changeTodoPositionInput" type="number">
+    <input id="changeTodoTextInput" type="text">
+</div>
+
+<div>
+    <button onclick="handlers.deleteTodo()"></button>
+    <input id="deleteTodoPositionInput" type="number">
+</div>
+
+<div>
+    <button onclick="handlers.toggleCompleted>Toggle Completed</button>
+    <input id="toggleCompletedPositionInput" type="number">
+</div>
+```
+
+- Now over to JS to add a new method
+- In your handlers, keep the methods consistent with the other functions
+```
+var handlers = {
+    displayTodos: function() {
+    todoList.displayTodos();
+    },
+    addTodo: function() {
+        var addTodoTextInput = document.getElementById('addTodoTextInput');
+        todoList.addTodo(addTodoTextInput.value);
+        addTodoTextInput.value = '';
+    },
+    changeTodo: function() {
+        var changeTodoPositionInput = document.getElementById('changeTodoPositionInput');
+        var changeTodoTextInput = document.getElementById('changeTodoTextInput');
+        todoList.changeTodo(changeTodoPositionInput.valueAsNumber, changeTodoTextInput.value);
+        changeTodoPositionInput.value = '';
+        changeTodoTextInput.value = '';
+    },
+    deleteTodo: function() {
+        var deleteTodoPositionInput = document.getElementById('deleteTodoPositionInput');
+        todoList.deleteTodo(deleteTodoPositionInput.valueAsNumber);
+        deleteTodoPositionInput.value = '';
+    },
+    toggleCompleted: function() {
+        var toggleCompletedPositionInput = document.getElementById('toggleCompletedPositionInput');
+        todoList.toggleCompleted(toggleCompletedPositionInput.valueAsNumber);
+        toggleCompletedPositionInput.value = '';
+    },
+    toggleAll: function() {
+        todoList.toggleAll();
+    }
+}   
+```
+
+## Review
+- In version 8, we learned how to use inputs to grab user input
+- We also use some extra processing with .valueAsNumber
