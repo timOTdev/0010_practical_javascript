@@ -1900,3 +1900,166 @@ var todoList = {
 - The handlers is designed to help shorten our code
 - The view object is just meant to display to do items
 - Now you can understand how to declutter and refactor your code
+
+# Interlude - Functions inside of functions
+## runWithDebugger
+- We are going to work with a function that logs 10 numbers
+```
+function logTenNumbers() {
+    for (var i = 0; i < 10; i++) {
+        console.log(i);
+    }
+}
+
+logTenNumbers() // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+debugger;
+logTenNumbers
+```
+
+- It would be nice if we had a debugger function
+```
+// dbugger;
+// OurFunction();
+
+// debugger;
+// logTenNumbers();
+```
+
+- It's a function that enhances another function
+- It is a powerful concept
+- We can also see that functions can be passed into other functions
+- Let's write a debugger function:
+```
+function runWithDebugger(ourFunction) {
+    debugger;
+    ourFunction();
+}
+
+runWithDebugger(function logTenNumbers() {
+    for (var i = 0; i < 10; i++) {
+        console.log(i);
+    }
+});
+```
+
+## setTimeout
+- We are going to use a function to run another function after a certain amount of time
+- Time is in milliseconds
+```
+setTimout(function() {
+    console.log('Wake up Gordon!');
+}, 5000)
+```
+
+## forEach
+- Sometimes you want to run a function on every item in an array
+```
+var students = ['jonathan', 'jenny', 'elliot'];
+function logName(name) {
+    console.log(name);
+}
+
+logName(student[0]) // jonathan
+logName(student[1]) // jenny
+logName(student[2]) // elliot
+```
+
+- You can use a for loop instead
+```
+for (var i = 0; i < students.length; i++) {
+    logName(students[i]);
+}
+```
+
+- However, there is a function already built into all arrays called .forEach()
+- It will automatically run the function on every item in the array
+- There are 3 ways you can do this:
+```
+students.forEach(logName)
+
+students.forEach(function logName(name) {
+    console.log(name);
+})
+
+
+students.forEach(function(name) {
+    console.log(name);
+})
+```
+
+- Now we are going to create our own .forEach() function
+```
+function forEach(myArray, myFunction) {
+    for (var i = 0; i < myArray.length; i++) {
+        myFunction(myArray[i]);
+    }
+}
+
+forEach(students, function(student) {
+    console.log(student);
+})
+
+// Or
+
+forEach(students, logName)
+```
+
+## addEventListener
+- Here's an example of another function that enhances another function
+- In chrome, you can reference the element on the page with something like "$0"
+```
+$0 // <h2 id="Tutorials">Tutorials</h2>
+var tutorialsElement = $0;
+tutorialsElement // <h2 id="Tutorials">Tutorials</h2>
+```
+
+- Elements in the DOM have a method called .addEventListener
+- It will listen for different types of events 
+```
+tutorialsElement.addEventListener('click', function() {
+    console.log('The tutuorials element was clicked!');
+})
+```
+
+- If you happen to use the event parameter, you can see the console logs the action
+- It will result in showing you MouseEvent with a bunch of information
+```
+tutorialsElement.addEventListener('click', function(event) {
+    console.log(event);
+    console.log('The tutuorials element was clicked!');
+})
+```
+
+## Buzzwords: higher order functions and callback functions
+- Here is some vocabulary to empower you in discussions 
+
+1. Higher order functions:
+- Functions that accept other functions
+- Enhance the behavior of other functions
+- Like .runWithDebugger(), .setTimeout(), .forEach(), and .addEventListener()
+
+2. Callback functions:
+- The functions are passed into higher order functions
+
+- Double-stars are higher order functions
+- Single-starts are callback functions
+```
+**runWithDebugger**(*function() {
+    for (var i = 0; i < 10; i++) {
+        console.log (i);
+    }
+}*);
+
+**setTimeout** (*function() {
+    console.log('Wake up Gordon!');
+}*, 5000);
+
+var students = ['jonathan', 'jenny', 'elliot'];
+**forEach**(students, *function(student) {
+    console.log(student);
+}*);
+
+tutorialsElement.**addEventListener**('click', *function(event) {
+    console.log('The tutorials element was clicked!');
+}*);
+```
