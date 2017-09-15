@@ -1663,9 +1663,10 @@ var handlers = {
 
 ## Inserting li elements into the DOM
 - We are going to learn how to insert elements into the DOM
-- We learned about <ul>, <ol>, <li>
-- When you add an <li> to <ul>, you get bullets
-- When you add an <li> to <ol>, you get numbers
+- We learned about ul, ol, li
+- When you add an li to ul, you get bullets
+- When you add an li to ol, you get numbers
+- Here, we insert a new ul:
 ```
 <div>
     <button onclick="handlers.displayTodos()">Display Todos</button>
@@ -1712,10 +1713,10 @@ todosUl.appendChild(todoLi);
 ```
 
 ## There should be an li element for every todo
-- We want are code to update as we add li's
-- First, make sure you have an empty <ul> in html
+- We want our code to update as we add li's
+- First, make sure you have an empty ul in html
 
-- We are adding a variable view to display todos array on the screen
+- We are adding a variable called view to display todos array on the screen
 - It doesn't add any logic
 - We add this to our JS file:
 ```
@@ -1857,7 +1858,7 @@ var view = {
 }
 ```
 
-- We are also displaytodos button from the HTML and handlers;
+- We are also removing displaytodos button from the HTML and handlers;
 ```
     <button onclick="handlers.displayTodos()">Display Todos</button>
 ```
@@ -1895,9 +1896,9 @@ var todoList = {
 - We wrote a lot of code in the view object
 - The difference is that we are not working with the console anymore
 - Now we are working with the DOM
-- We inserted the <ul> in the html
+- We inserted the ul in the html
 - We are now use the view object in every handler
-- The handlers is designed to help shorten our code
+- The handlers are designed to help shorten our code
 - The view object is just meant to display to do items
 - Now you can understand how to declutter and refactor your code
 
@@ -1925,7 +1926,7 @@ logTenNumbers
 // logTenNumbers();
 ```
 
-- It's a function that enhances another function
+- Debugger is a function that enhances another function
 - It is a powerful concept
 - We can also see that functions can be passed into other functions
 - Let's write a debugger function:
@@ -1955,6 +1956,7 @@ setTimout(function() {
 - Sometimes you want to run a function on every item in an array
 ```
 var students = ['jonathan', 'jenny', 'elliot'];
+
 function logName(name) {
     console.log(name);
 }
@@ -1988,6 +1990,15 @@ students.forEach(function(name) {
 ```
 
 - Now we are going to create our own .forEach() function
+```
+// Reminder
+var students = ['jonathan', 'jenny', 'elliot'];
+
+function logName(name) {
+    console.log(name);
+}
+```
+
 ```
 function forEach(myArray, myFunction) {
     for (var i = 0; i < myArray.length; i++) {
@@ -2062,4 +2073,347 @@ var students = ['jonathan', 'jenny', 'elliot'];
 tutorialsElement.**addEventListener**('click', *function(event) {
     console.log('The tutorials element was clicked!');
 }*);
+```
+
+# Version 10 - Click to delete
+## Introducing Glitch
+- Glitch gets rid of the problem of plunker preview target and having to run the code
+- Clone the project from Gordon's project: https://glitch.com/~forest-sunset
+
+## The 'return' statement
+- We need to know how to return values from a function
+```
+function multiplyTwoNumbers(a, b) {
+    var result = a * b;
+    return result;
+}
+
+var theProductOf2And10 = multiply TwoNumbers(2, 10);
+```
+
+## Requirements
+1. There should be a way to create delete buttons
+2. There should be a delete button for each todo
+3. Each li should have an id that has the todo position
+4. Delete buttons should have access to the todo Id
+5. Clicking delete should update todoList.todos and the DOM
+
+## There should be a way to create delete buttons
+- We add a new method to the view object
+```
+var view = {
+  displayTodos: function() {
+    var todosUl = document.querySelector('ul');
+    todosUl.innerHTML = '';
+    for (var i = 0; i < todoList.todos.length; i++) {
+      var todoLi = document.createElement('li');
+      var todo = todoList.todos[i];
+      var todoTextWithCompletion = '';
+
+      if (todo.completed === true) {
+        todoTextWithCompletion = '(x) ' + todo.todoText;
+      } else {
+        todoTextWithCompletion = '( ) ' + todo.todoText;
+      }
+      
+      todoLi.textContent = todoTextWithCompletion;
+      todosUl.appendChild(todoLi);
+    }
+  },
+  createDeleteButton: function() {
+    var deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.className = 'deleteButton';
+    return deleteButton;
+  }
+};
+
+view.createDeleteButton() // <button class="deleteButton">Delete</button>
+var gordonElement = view.createDeleteButton();
+gordonElement // <button class="deleteButton">Delete</button>
+```
+
+## There should be a delete button for each todo
+- We add a new line to the view object
+```
+todoLi.appendChild(this.createDeleteButton());
+```
+```
+var view = {
+  displayTodos: function() {
+    var todosUl = document.querySelector('ul');
+    todosUl.innerHTML = '';
+    for (var i = 0; i < todoList.todos.length; i++) {
+      var todoLi = document.createElement('li');
+      var todo = todoList.todos[i];
+      var todoTextWithCompletion = '';
+
+      if (todo.completed === true) {
+        todoTextWithCompletion = '(x) ' + todo.todoText;
+      } else {
+        todoTextWithCompletion = '( ) ' + todo.todoText;
+      }
+      
+      todoLi.textContent = todoTextWithCompletion;
+      todoLi.appendChild(this.createDeleteButton());
+      todosUl.appendChild(todoLi);
+    }
+  },
+  createDeleteButton: function() {
+    var deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.className = 'deleteButton';
+    return deleteButton;
+  }
+};
+```
+
+## Each li should have an id that has the todo position
+- We add an id in the loop
+```
+todoLi.id = i;
+```
+```
+var view = {
+  displayTodos: function() {
+    var todosUl = document.querySelector('ul');
+    todosUl.innerHTML = '';
+    for (var i = 0; i < todoList.todos.length; i++) {
+      var todoLi = document.createElement('li');
+      var todo = todoList.todos[i];
+      var todoTextWithCompletion = '';
+
+      if (todo.completed === true) {
+        todoTextWithCompletion = '(x) ' + todo.todoText;
+      } else {
+        todoTextWithCompletion = '( ) ' + todo.todoText;
+      }
+      
+        todoLi.id = i;
+        todoLi.textContent = todoTextWithCompletion;
+        todoLi.appendChild(this.createDeleteButton());
+        todosUl.appendChild(todoLi);
+    }
+  },
+  createDeleteButton: function() {
+    var deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.className = 'deleteButton';
+    return deleteButton;
+  }
+};
+```
+
+## Delete buttons should have access to the todo Id
+- We can add .addEventListener in our createDeleteButton method but can cause memory problems
+- There's a better way to do it by adding only one .addEventListener on the unordered list
+```
+var view = {
+  displayTodos: function() {
+    var todosUl = document.querySelector('ul');
+    todosUl.innerHTML = '';
+    for (var i = 0; i < todoList.todos.length; i++) {
+      var todoLi = document.createElement('li');
+      var todo = todoList.todos[i];
+      var todoTextWithCompletion = '';
+
+      if (todo.completed === true) {
+        todoTextWithCompletion = '(x) ' + todo.todoText;
+      } else {
+        todoTextWithCompletion = '( ) ' + todo.todoText;
+      }
+      
+        todoLi.id = i;
+        todoLi.textContent = todoTextWithCompletion;
+        todoLi.appendChild(this.createDeleteButton());
+        todosUl.appendChild(todoLi);
+    }
+  },
+  createDeleteButton: function() {
+    var deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.className = 'deleteButton';
+    return deleteButton;
+  }
+};
+
+var todosUl = document.querySelector('ul');
+
+todosUl.addEventListener('click', function(event) {
+    console.log(event.target.parentNode.id);
+})
+```
+
+- We are going to use event to log the action
+- The important thing is the target from MouseEvent: target: button.deleteButton
+- But we notice that the id is on the li element and not the button
+- The other important: parentNode: li#0
+```
+todosUl.addEventListener('click', function(event) {
+    console.log(event); // MouseEvent
+})
+```
+
+## Clicking delete should update todoList.todos and the DOM
+- We use parseInt() to change something into a number instead of a string
+```
+var view = {
+  displayTodos: function() {
+    var todosUl = document.querySelector('ul');
+    todosUl.innerHTML = '';
+    for (var i = 0; i < todoList.todos.length; i++) {
+      var todoLi = document.createElement('li');
+      var todo = todoList.todos[i];
+      var todoTextWithCompletion = '';
+
+      if (todo.completed === true) {
+        todoTextWithCompletion = '(x) ' + todo.todoText;
+      } else {
+        todoTextWithCompletion = '( ) ' + todo.todoText;
+      }
+      
+        todoLi.id = i;
+        todoLi.textContent = todoTextWithCompletion;
+        todoLi.appendChild(this.createDeleteButton());
+        todosUl.appendChild(todoLi);
+    }
+  },
+  createDeleteButton: function() {
+    var deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.className = 'deleteButton';
+    return deleteButton;
+  }
+};
+
+var todosUl = document.querySelector('ul');
+
+todosUl.addEventListener('click', function(event) {
+    // Get the element that was clicked on.
+    var elementClicked = event.target;
+
+    // Check if elementClicked is a delete button.
+    if (elementClicked.className === 'deleteButton') {
+        // Run handlers.deleteTodo(position);
+        handlers.deleteTodo(parseInt(elementClicked.parentNode.id));
+    }
+})
+```
+
+- We are going to use event to log the action
+- The important thing is the target from MouseEvent: target: button.deleteButton
+- But we notice that the id is on the li element and not the button
+- The other important: parentNode: li#0
+```
+todosUl.addEventListener('click', function(event) {
+    console.log(event); // MouseEvent
+})
+```
+
+- We also get rid the following in the deleteTodo method:
+```
+var deleteTodoPositionInput = document.getElementById('deleteTodoPositionInput');
+todoList.delete(Todo(deleteTodoPositionInput.valueAsNumber);)
+```
+
+- We rewrite the deleteTodo method:
+```
+deleteTodo: function(position) {
+    todoList.deleteTodo(position);
+    view.displayTodos();
+}
+```
+
+- We want to think about putting this delete button in the view object
+- It's just an organizational thing
+- We also need to call the setUpEventListeners method at the end of the file
+```
+var view = {
+  displayTodos: function() {
+    var todosUl = document.querySelector('ul');
+    todosUl.innerHTML = '';
+    for (var i = 0; i < todoList.todos.length; i++) {
+      var todoLi = document.createElement('li');
+      var todo = todoList.todos[i];
+      var todoTextWithCompletion = '';
+
+      if (todo.completed === true) {
+        todoTextWithCompletion = '(x) ' + todo.todoText;
+      } else {
+        todoTextWithCompletion = '( ) ' + todo.todoText;
+      }
+      
+        todoLi.id = i;
+        todoLi.textContent = todoTextWithCompletion;
+        todoLi.appendChild(this.createDeleteButton());
+        todosUl.appendChild(todoLi);
+    }
+  },
+  createDeleteButton: function() {
+    var deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.className = 'deleteButton';
+    return deleteButton;
+  }
+  setUpEventListeners: function() {
+    var todosUl = document.querySelector('ul');
+
+    todosUl.addEventListener('click', function(event) {
+        // Get the element that was clicked on.
+        var elementClicked = event.target;
+
+        // Check if elementClicked is a delete button.
+        if (elementClicked.className === 'deleteButton') {
+            // Run handlers.deleteTodo(position);
+            handlers.deleteTodo(parseInt(elementClicked.parentNode.id));
+        }
+    })
+  }
+};
+
+view.setUpEventListeners();
+```
+
+## Cleanup and Review
+- We want to clean up and remove some things in our apps:
+- Remove the delete button from our app in the html
+```
+    <div>
+        <button onclick="handlers.deleteTodo()">Delete</button>
+        <input id="deleteTodoPositionInput" type="number">
+    </div>
+```
+
+- Now we are reviewing the JS code
+1. We created a createDeleteButton function and practiced with return statements
+```
+  createDeleteButton: function() {
+    var deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.className = 'deleteButton';
+    return deleteButton;
+  }
+```
+
+2. Then we focused on setUpEventListeners on a single ul
+- This is better than making an .addEventListener for each todo li
+- We learned "event delegation"
+- This is when a parent element has an event listener and then delegate actions to the children when the event occurs
+- Another definition: "DOM event delegation is a mechanism of responding to ui-events via a single common parent rather  
+than each child, through the magic of event "bubling" (aka event delegation).
+```
+setUpEventListeners: function() {
+    var todosUl = document.querySelector('ul');
+
+    todosUl.addEventListener('click', function(event) {
+        // Get the element that was clicked on.
+        var elementClicked = event.target;
+
+        // Check if elementClicked is a delete button.
+        if (elementClicked.className === 'deleteButton') {
+            // Run handlers.deleteTodo(position);
+            handlers.deleteTodo(parseInt(elementClicked.parentNode.id));
+        }
+    })
+  }
 ```
