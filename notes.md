@@ -2264,7 +2264,7 @@ var view = {
     for (var i = 0; i < todoList.todos.length; i++) {
       var todoLi = document.createElement('li');
       var todo = todoList.todos[i];
-      var todoTextWithCompletion = '';
+      var todoTextWithCompletion = '';                
 
       if (todo.completed === true) {
         todoTextWithCompletion = '(x) ' + todo.todoText;
@@ -2417,3 +2417,229 @@ setUpEventListeners: function() {
     })
   }
 ```
+
+# Version 11 - Destroy all for loops
+## Requirements
+1. todoList.toggleAll should use forEach
+2. view.displayTodos should use forEach
+
+## todoList.toggleAll should use forEach
+- There are 4 for loops we are going to destroy
+- We will comment it out and recode
+- Every array comes with forEach function
+```
+var todoList = {
+  todos: [],
+  addTodo: function(todoText) {
+    this.todos.push({
+      todoText: todoText,
+      completed: false
+    });
+  },
+  changeTodo: function(position, todoText) {
+    this.todos[position].todoText = todoText;
+  },
+  deleteTodo: function(position) {
+    this.todos.splice(position, 1);
+  },
+  toggleCompleted: function(position) {
+    var todo = this.todos[position];
+    todo.completed = !todo.completed;
+  },
+  toggleAll: function() {
+    var totalTodos = this.todos.length;
+    var completedTodos = 0;
+    
+    // Get number of completed todos.
+    <!-- for (var i = 0; i < totalTodos; i++) {
+      if (this.todos[i].completed === true) {
+        completedTodos++;
+      }
+    } -->
+
+    // Recode with forEach
+    this.todos.forEach(function(todo) {
+        if (todo.completed === true) {
+            completedTodos++;
+        }
+    });
+    
+    // Case 1: If everything’s true, make everything false.
+    <!-- if (completedTodos === totalTodos) {
+      for (var i = 0; i < totalTodos; i++) {
+        this.todos[i].completed = false;
+      } -->
+
+      // Recode with forEach
+      this. todos.forEach(function(todo) {
+          todo.completed = false;
+      });
+
+    // Case 2: Otherwise, make everything true.
+    } else {
+      <!-- for (var i = 0; i < totalTodos; i++) {
+        this.todos[i].completed = true; -->
+
+        //Recode with forEach
+        this.todos.forEach(function(todo) {
+            todo.completed = true;
+        })
+      }      
+    }
+  }
+};
+
+var handlers = {
+  addTodo: function() {
+    var addTodoTextInput = document.getElementById('addTodoTextInput');
+    todoList.addTodo(addTodoTextInput.value);
+    addTodoTextInput.value = '';
+    view.displayTodos();
+  },
+  changeTodo: function() {
+    var changeTodoPositionInput = document.getElementById('changeTodoPositionInput');
+    var changeTodoTextInput = document.getElementById('changeTodoTextInput');
+    todoList.changeTodo(changeTodoPositionInput.valueAsNumber, changeTodoTextInput.value);
+    changeTodoPositionInput.value = '';
+    changeTodoTextInput.value = '';
+    view.displayTodos();
+  },
+  deleteTodo: function() {
+    var deleteTodoPositionInput = document.getElementById('deleteTodoPositionInput');
+    todoList.deleteTodo(deleteTodoPositionInput.valueAsNumber);
+    deleteTodoPositionInput.value = '';
+    view.displayTodos();
+  },
+  toggleCompleted: function() {
+    var toggleCompletedPositionInput = document.getElementById('toggleCompletedPositionInput');
+    todoList.toggleCompleted(toggleCompletedPositionInput.valueAsNumber);
+    toggleCompletedPositionInput.value = '';
+    view.displayTodos();
+  },
+  toggleAll: function() {
+    todoList.toggleAll();
+    view.displayTodos();
+  }  
+};
+
+var view = {
+  displayTodos: function() {
+    var todosUl = document.querySelector('ul');
+    todosUl.innerHTML = '';
+    for (var i = 0; i < todoList.todos.length; i++) {
+      var todoLi = document.createElement('li');
+      var todo = todoList.todos[i];
+      var todoTextWithCompletion = '';
+
+      if (todo.completed === true) {
+        todoTextWithCompletion = '(x) ' + todo.todoText;
+      } else {
+        todoTextWithCompletion = '( ) ' + todo.todoText;
+      }
+      
+      todoLi.textContent = todoTextWithCompletion;
+      todosUl.appendChild(todoLi);
+    }
+  },
+  createDeleteButton: function() {
+    var deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.className = 'deleteButton';
+    return deleteButton;
+  }
+};
+```
+
+- We will now combine the two Case into one function 
+- This is a more advance technique
+```
+    // Case 1: If everything’s true, make everything false.
+    <!-- if (completedTodos === totalTodos) {
+      for (var i = 0; i < totalTodos; i++) {
+        this.todos[i].completed = false;
+      } -->
+
+      // Recode with forEach
+      this. todos.forEach(function(todo) {
+          todo.completed = false;
+      });
+
+    // Case 2: Otherwise, make everything true.
+    } else {
+      <!-- for (var i = 0; i < totalTodos; i++) {
+        this.todos[i].completed = true; -->
+
+        //Recode with forEach
+        this.todos.forEach(function(todo) {
+            todo.completed = true;
+        })
+      }      
+    }
+```
+```
+    // Recode
+    this.todos.forEach(function(todo) {
+        // Case 1: If everything's true, make eveything false.
+        if (completed === totalTodos) {
+            todo.completed = false;
+        // Case 2: Otherwise, make everything true.
+        } else {
+            todo.completed = true;
+        }
+    })
+```
+
+## view.displayTodos should use forEach
+- Now we will get rid of the remaining for loop
+- The forEach also has a 2nd parameter that specifies a position, similar to "i" in the for loop
+```
+var view = {
+  displayTodos: function() {
+    var todosUl = document.querySelector('ul');
+    todosUl.innerHTML = '';
+    <!-- for (var i = 0; i < todoList.todos.length; i++) {
+      var todoLi = document.createElement('li');
+      var todo = todoList.todos[i];
+      var todoTextWithCompletion = '';
+
+      if (todo.completed === true) {
+        todoTextWithCompletion = '(x) ' + todo.todoText;
+      } else {
+        todoTextWithCompletion = '( ) ' + todo.todoText;
+      }
+      
+        todoLi.id = position;
+        todoLi.textContent = todoTextWithCompletion;
+        todoLi.appendChild(this.createDeleteButton());
+        todosUl.appendChild(todoLi);
+    } -->
+
+    // Recode with forEach
+    todoList.todos.forEach(function(todo, position) {
+        var todoLi = document.createElement('li');
+        var todoTextWithCompletion = '';
+
+        if (todo.completed === true) {
+            todoTextWithCompletion = '(x) ' + todo.todoText;
+        } else {
+            todoTextWithCompletion = '( ) ' + todo.todoText;
+        }
+        
+        todoLi.id = position;
+        todoLi.textContent = todoTextWithCompletion;
+        todoLi.appendChild(this.createDeleteButton());
+        todosUl.appendChild(todoLi);
+        }
+    }, this);
+  createDeleteButton: function() {
+    var deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.className = 'deleteButton';
+    return deleteButton;
+  }
+};
+```
+## Review
+- We don't have for loops anymore
+- We collapsed two of the for loops into forEach
+- We learned about the "this" keyword when it is not in a method
