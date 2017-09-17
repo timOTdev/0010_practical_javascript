@@ -2643,3 +2643,220 @@ var view = {
 - We don't have for loops anymore
 - We collapsed two of the for loops into forEach
 - We learned about the "this" keyword when it is not in a method
+
+# Interlude - Understanding 'this'
+## The cheatsheet
+- You can access it at: https://github.com/gordonmzhu/cheatsheet-js
+- There are different situation when the keyword "this" means different things
+- Try to understand deeply and review this cheatsheet
+
+## Case 1: In a regular function
+- **window** might be new to you but it refers to object that refers to the browser window
+```
+Case 1: In a regular function (or if you're not in a function at all), this points to window. This is the default case.
+
+function logThis() {
+  console.log(this);
+}
+
+logThis(); // window
+
+// In strict mode, `this` will be `undefined` instead of `window`. 
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
+```
+
+## Case 2: When a function is called as a method
+```
+Case 2: When a function is called as a method, this points to the object that's on the left side of the dot.
+
+/*
+ * You can also think of this as the "left of the dot" rule. 
+ * For example, in myObject.myMethod(), `this` will be myObject
+ * because myObject is to the left of the dot.
+ *
+ * Of course, if you're using this syntax myObject['myMethod'](),
+ * technically it would be the "left of the dot or bracket" rule,
+ * but that sounds clumsy and generally terrible.
+ *
+ * If you have multiple dots, the relevant dot is the one closest 
+ * to the method call. For example, if you have one.two.hi();
+ * `this` inside of hi will be two.
+ */
+
+var myObject = {
+  myMethod: function() {
+    console.log(this);
+  }
+};
+
+myObject.myMethod(); // myObject
+```
+
+## Case 3: when a function is called as a constructor
+- We have not seen constructor functions yet in this course
+- If they intend the function to be a constructor function, they will capitalize the first letter IE Person
+```
+Case 3: In a function that's being called as a constructor, this points to the object that the constructor is creating.
+
+function Person(name) {
+  this.name = name;
+}
+
+var gordon = new Person('gordon');
+console.log(gordon); // {name: 'gordon'}
+```
+
+- Notice that when you run the function, it has two automatic background code already injected
+1. A new object is created
+2. The new object is returned
+```
+function Person(name) {
+    // this = {};
+    this.name = name; // {name: 'gordon'}
+    // return this;
+}
+
+new Person('gordon');
+```
+
+## Case 4: When you explicitly set the value of this with bind, apply, or call
+
+```
+Case 4: When you explicitly set the value of this manually using bind, apply, or call, it's all up to you.
+
+function logThis() {
+  console.log(this);
+}
+
+var explicitlySetLogThis = logThis.bind({name: 'Gordon'});
+
+explicitlySetLogThis(); // {name: 'Gordon'}
+
+// Note that a function returned from .bind (like `boundOnce` below),
+// cannot be bound to a different `this` value ever again.
+// In other words, functions can only be bound once.
+var boundOnce = logThis.bind({name: 'The first time is forever'});
+
+// These attempts to change `this` are futile.
+boundOnce.bind({name: 'why even try?'})();
+boundOnce.apply({name: 'why even try?'});
+boundOnce.call({name: 'why even try?'});
+```
+
+- So remember the default "this" is the window without strict mode
+```
+function logThis() {
+  console.log(this);
+}
+
+logThis(); // window
+```
+
+### Bind
+- Does 2 things:
+1. It is a Method on functions
+2. Returns a copy of the function where 'this' is set to the first argument passed into .bind()
+```
+var explicitlySetLogThis = logThis.bind({name: 'Gordon'});
+```
+
+### Apply and Call
+- Apply and Call changes "this" and runs the function immediately
+- Bind changes "this" but you have to call the function it in a separate step
+```
+logThis.apply({name: 'Gordon'});
+logThis.call({name: 'Gordon'});
+```
+
+- With Apply, you can only send in 1 argument and more if you use an array
+- With Call, you can just directly pass in multiple arguments
+```
+
+function logThisWithArguments(greeting, name) {
+  console.log(greeting, name);
+  console.log(this);
+}
+
+logThisWithArguments('hi', 'gordon') // hi gordon, window object
+```
+```
+logThisWithArguments.apply({name: 'Gordon'}, ['hi', 'gordon']);
+logThisWithArguments.call({name: 'Gordon'}, 'hi', 'gordon');
+
+```
+
+### Last detail
+- Notice we used () in .bind to call the function since it is not called immediately
+```
+// Note that a function returned from .bind (like `boundOnce` below),
+// cannot be bound to a different `this` value ever again.
+// In other words, functions can only be bound once.
+var boundOnce = logThis.bind({name: 'The first time is forever'});
+
+// These attempts to change `this` are futile.
+boundOnce.bind({name: 'why even try?'})();
+boundOnce.apply({name: 'why even try?'});
+boundOnce.call({name: 'why even try?'});
+```
+
+## Case 5: When you're in a callback function
+- This is a review and reminder to apply rules methodically
+```
+Case 5: In a callback function, apply the above rules methodically.
+
+function outerFunction(callback) {
+  callback();
+}
+
+function logThis() {
+  console.log(this);
+}
+
+/*
+ * Case 1: The regular old default case.
+ */
+ 
+outerFunction(logThis); // window
+
+/*
+ * Case 2: Call the callback as a method
+ * (You'll probably NEVER see this, but I guess it's possible.)
+ */
+ 
+function callAsMethod(callback) {
+  var weirdObject = {
+    name: "Don't do this in real life"
+  };
+  
+  weirdObject.callback = callback;
+  weirdObject.callback();
+}
+
+callAsMethod(logThis); // `weirdObject` will get logged to the console
+
+/*
+ * Case 3: Calling the callback as a constructor. 
+ * (You'll also probably never see this. But in case you do...)
+ */
+ 
+function callAsConstructor(callback) {
+  new callback();
+}
+
+callAsConstructor(logThis); // the new object created by logThis will be logged to the console
+
+/*
+ * Case 4: Explicitly setting `this`.
+ */
+ 
+function callAndBindToGordon(callback) {
+  var boundCallback = callback.bind({name: 'Gordon'});
+  boundCallback();
+}
+
+callAndBindToGordon(logThis); // {name: 'Gordon'}
+
+// In a twist, we give `callAndBindToGordon` a function that's already been bound.
+var boundOnce = logThis.bind({name: 'The first time is forever'});
+callAndBindToGordon(boundOnce); // {name: 'The first time is forever'}
+```
